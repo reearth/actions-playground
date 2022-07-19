@@ -1,0 +1,31 @@
+name: pr
+on:
+  workflow_dispatch:
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up git config
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GPT }}
+          fetch-depth: 0
+      - name: commit
+        run: rm test.txt; date > test.txt
+      - id: pr
+        name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GPT }}
+          commit-message: test
+          title: test
+          body: test
+          branch: test
+      - uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.GPT }}
+          pull-request-number: ${{ steps.pr.outputs.pull-request-number }}
