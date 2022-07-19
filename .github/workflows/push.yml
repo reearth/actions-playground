@@ -13,9 +13,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GPT }}
+          fetch-depth: 0
       - name: commit
-        run: |
-          rm test.txt
-          date > test.txt
-          git commit -am 'test'
-          git push origin main
+        run: rm test.txt; date > test.txt
+      - id: pr
+        name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GPT }}
+          commit-message: test
+          title: test
+          body: test
+          branch: test
+      - uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.GPT }}
+          pull-request-number: ${{ steps.pr.outputs.pull-request-number }}
