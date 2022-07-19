@@ -1,0 +1,21 @@
+name: push
+on:
+  workflow_dispatch:
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up git config
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GPT }}
+      - name: commit
+        run: |
+          rm test.txt
+          date > test.txt
+          git commit -am 'test'
+          git push origin main
